@@ -34,11 +34,12 @@ def get_auth_header(token: str):
     '''
     return {'Authorization': 'Bearer ' + token}
 
-def search_for_artitsts(token: str, _type: str, name: str, limit: int) -> dict:
+def search_for_artists(token: str, _type: str, name: str, limit: int) -> dict:
     '''
     Creates and sends an GET_HTTP request to Spotify API.
     Returns JSON-file as Python-dictionary.
-    >>> search_for_artists(get_token(), artist, rammstein)
+    >>> search_for_artists(get_token(), 'artist', 'rammstein', 1)['artists']['items'][0]['type']
+    'artist'
     '''
     url = 'https://api.spotify.com/v1/search'
     headers = get_auth_header(token)
@@ -58,16 +59,17 @@ def parse_artist(artist: str, infotype: str) -> str:
     genres - artist genres
     popularity - artist popularity in Ukraine
     tracks - artist's 10 most popular tracks
+    >>> parse_artist('rhcp', 'link')
+    'https://open.spotify.com/artist/0L8ExT028jH3ddEcZwqJJ5'
     '''
     token = get_token()
     if infotype == 'tracks':
-        data = search_for_artitsts(token, 'track', artist, 20)['tracks']['items']
+        data = search_for_artists(token, 'track', artist, 20)['tracks']['items']
         top = sorted([(_x['popularity'], _x['name']) for _x in data])[10:]
         return list(zip(*top))[1]
     else:
-        data = search_for_artitsts(token, 'artist', artist, 1)['artists']['items'][0]
+        data = search_for_artists(token, 'artist', artist, 1)['artists']['items'][0]
         if infotype == 'link':
             return data['external_urls']['spotify']
         else:
             return data[infotype]
-        
