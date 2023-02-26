@@ -4,7 +4,7 @@ import base64
 import json
 import requests
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request as flaskrequest
 
 import pycountry
 from geopy.geocoders import Nominatim
@@ -77,19 +77,26 @@ def parse_tracks(tracks: dict):
             continue
 
     _map = folium.Map()
+    title_html = f'<h3 align="center" style="font-size:16px">Song: {most_popular["name"]}</h3>'
+    _map.get_root().html.add_child(folium.Element(title_html))
+
     for coords, name in locations:
         _map.add_child(folium.Marker(location=coords,
                                     popup=name,
                                     icon=folium.Icon(color='red')))
 
-    _map.save(r'C:\\Users\\zahar\\OneDrive\\UCU\\1_year\\Programming\\Lab#2\\spotify_api_kohut_ucu_lab\\spotify_web_app\\templates\\index.html')
+    _map.save(r'C:\\Users\\zahar\\OneDrive\\UCU\\1_year\\Programming\\Lab#2\\spotify_api_kohut_ucu_lab\\spotify_web_app\\templates\\map.html')
 
 app = Flask(__name__)
 
 @app.route('/')
-def main():
-    parse_tracks(search_for_artists(get_token(), 'Zhadan i Sobaky'))
+def home():
     return render_template('index.html')
 
+@app.route('/map', methods=['GET', 'POST'])
+def map():
+    parse_tracks(search_for_artists(get_token(), flaskrequest.form['artist']))
+    return render_template('map.html')
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
