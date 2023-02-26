@@ -4,7 +4,7 @@ import base64
 import json
 import requests
 
-import flask
+from flask import Flask, render_template
 
 import pycountry
 from geopy.geocoders import Nominatim
@@ -82,4 +82,14 @@ def parse_tracks(tracks: dict):
                                     popup=name,
                                     icon=folium.Icon(color='red')))
 
-    _map.save('index.html')
+    _map.save(r'C:\\Users\\zahar\\OneDrive\\UCU\\1_year\\Programming\\Lab#2\\spotify_api_kohut_ucu_lab\\spotify_web_app\\templates\\index.html')
+
+app = Flask(__name__)
+
+@app.route('/')
+def main():
+    parse_tracks(search_for_artists(get_token(), 'Zhadan i Sobaky'))
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run()
