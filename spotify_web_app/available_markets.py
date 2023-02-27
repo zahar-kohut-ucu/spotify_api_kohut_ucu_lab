@@ -95,8 +95,12 @@ def home():
 
 @app.route('/map', methods=['GET', 'POST'])
 def map():
-    parse_tracks(search_for_artists(get_token(), flaskrequest.form['artist']))
+    try:   
+        parse_tracks(search_for_artists(get_token(), flaskrequest.form['artist']))
+    except IndexError:
+        return render_template('error.html')
     return render_template('map.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
