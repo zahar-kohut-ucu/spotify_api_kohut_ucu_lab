@@ -85,7 +85,7 @@ def parse_tracks(tracks: dict):
                                     popup=name,
                                     icon=folium.Icon(color='red')))
 
-    _map.save(r'C:\\Users\\zahar\\OneDrive\\UCU\\1_year\\Programming\\Lab#2\\spotify_api_kohut_ucu_lab\\spotify_web_app\\templates\\map.html')
+    _map.save(os.path.join(os.getcwd(), 'templates', 'map.html'))
 
 app = Flask(__name__)
 
