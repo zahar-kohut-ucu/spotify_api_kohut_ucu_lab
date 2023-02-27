@@ -63,13 +63,17 @@ def parse_artist(artist: str, infotype: str) -> str:
     'https://open.spotify.com/artist/0L8ExT028jH3ddEcZwqJJ5'
     '''
     token = get_token()
-    if infotype == 'tracks':
-        data = search_for_artists(token, 'track', artist, 20)['tracks']['items']
-        top = sorted([(_x['popularity'], _x['name']) for _x in data])[10:]
-        return list(zip(*top))[1]
-    else:
-        data = search_for_artists(token, 'artist', artist, 1)['artists']['items'][0]
-        if infotype == 'link':
-            return data['external_urls']['spotify']
+    try:
+        if infotype == 'tracks':
+            data = search_for_artists(token, 'track', artist, 20)['tracks']['items']
+            top = sorted([(_x['popularity'], _x['name']) for _x in data])[10:]
+            return list(zip(*top))[1]
         else:
-            return data[infotype]
+            data = search_for_artists(token, 'artist', artist, 1)['artists']['items'][0]
+            if infotype == 'link':
+                return data['external_urls']['spotify']
+            else:
+                return data[infotype]
+    except IndexError:
+        return "This artist doesn't exist."
+    
