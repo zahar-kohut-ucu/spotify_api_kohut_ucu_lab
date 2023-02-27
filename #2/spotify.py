@@ -50,7 +50,7 @@ def search_for_artists(token: str, _type: str, name: str, limit: int) -> dict:
     json_result = json.loads(result.content)
     return json_result
 
-def parse_artist(artist: str, infotype: str) -> str: 
+def parse_artist(artist: str, infotype: str) -> str:
     '''
     Parse JSON-file from Spotify API.
     Possible types of information:
